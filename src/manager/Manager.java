@@ -116,13 +116,10 @@ public class Manager {
 
     /**
      * 2.5
-     * Обновление подзадачи        ????? Правильно ли реализован метод или нужно через set
+     * Обновление подзадачи
      */
     public void updateSubTask(SubTask subTask) {
-        SubTask subTaskTemp = subTaskHashMap.get(subTask.getId());
-        subTaskTemp.setName(subTask.getName());
-        subTaskTemp.setDescription(subTask.getDescription());
-        subTaskTemp.setStatus(subTask.getStatus());
+        subTaskHashMap.put(subTask.getId(), subTask);
         updateStatus(subTask.getEpicId());
     }
 
