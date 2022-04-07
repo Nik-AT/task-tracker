@@ -7,15 +7,17 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class Manager {
+public class InMemoryTaskManager implements TaskManager {
 
     private int generatorId = 0;
     private final HashMap<Integer, Task> taskHashMap;
     private final HashMap<Integer, SubTask> subTaskHashMap;
     private final HashMap<Integer, Epic> epicHashMap;
+    HistoryManager historyManager = Managers.getHistory();  // new InMemoryHistoryManager
 
-    public Manager() {
+    public InMemoryTaskManager() {
         this.taskHashMap = new HashMap<>();
         this.subTaskHashMap = new HashMap<>();
         this.epicHashMap = new HashMap<>();
@@ -25,6 +27,7 @@ public class Manager {
      * 1.1
      * Получение списка всех задач
      */
+    @Override
     public ArrayList<Task> getTask() {
         return new ArrayList<>(taskHashMap.values());
     }
@@ -33,6 +36,7 @@ public class Manager {
      * 1.2
      * Удаление всех задач
      */
+    @Override
     public void deleteTask() {
         taskHashMap.clear();
     }
@@ -41,14 +45,18 @@ public class Manager {
      * 1.3
      * Получение задачи по идентификатору
      */
+    @Override
     public Task takeTask(int id) {
+        historyManager.add(taskHashMap.get(id));  // Добавление задачи в список просмотров
         return taskHashMap.get(id);
     }
+
 
     /**
      * 1.4
      * Создание задач. Сам объект должен передаваться в качестве параметра
      */
+    @Override
     public void createTask(Task task) {
         task.setId(++generatorId);
         taskHashMap.put(task.getId(), task);
@@ -58,6 +66,7 @@ public class Manager {
      * 1.5
      * Обновление задачи
      */
+    @Override
     public void updateTask(Task task) {
         if (!taskHashMap.containsKey(task.getId())) {
             return;
@@ -69,6 +78,7 @@ public class Manager {
      * 1.6
      * Удаление по идентификатору
      */
+    @Override
     public void removeTask(int id) {
         taskHashMap.remove(id);
     }
@@ -77,6 +87,7 @@ public class Manager {
      * 2.1
      * Получение списка всех подзадач
      */
+    @Override
     public ArrayList<SubTask> getSubTask() {
         return new ArrayList<>(subTaskHashMap.values());
     }
@@ -85,6 +96,7 @@ public class Manager {
      * 2.2
      * Удаление всех подзадач
      */
+    @Override
     public void deleteSubTask() {
         subTaskHashMap.clear();
         for (Epic epic : epicHashMap.values()) {
@@ -97,7 +109,9 @@ public class Manager {
      * 2.3
      * Получение задачи по идентификатору
      */
+    @Override
     public SubTask takeSubTask(int id) {
+        historyManager.add(subTaskHashMap.get(id));
         return subTaskHashMap.get(id);
     }
 
@@ -105,6 +119,7 @@ public class Manager {
      * 2.4
      * Создание подзадач
      */
+    @Override
     public SubTask createSubTask(SubTask subTask) {
         subTask.setId(++generatorId);
         Epic epic = epicHashMap.get(subTask.getEpicId());
@@ -118,6 +133,7 @@ public class Manager {
      * 2.5
      * Обновление подзадачи
      */
+    @Override
     public void updateSubTask(SubTask subTask) {
         subTaskHashMap.put(subTask.getId(), subTask);
         updateStatus(subTask.getEpicId());
@@ -127,6 +143,7 @@ public class Manager {
      * 2.6
      * Удаление подзадач по идентификатору
      */
+    @Override
     public void removeSubTask(int id) {
         SubTask subTask = subTaskHashMap.remove(id);
         Epic epic = epicHashMap.get(subTask.getEpicId());
@@ -138,6 +155,7 @@ public class Manager {
      * 3.1
      * Получение списка всех Эпиков
      */
+    @Override
     public ArrayList<Epic> getEpic() {
         return new ArrayList<>(epicHashMap.values());
     }
@@ -146,6 +164,7 @@ public class Manager {
      * 3.2
      * Удаление всех Эпиков
      */
+    @Override
     public void deleteEpic() {
         for (Integer key : epicHashMap.keySet()) {
             epicHashMap.get(key).getSubTaskArray().clear();
@@ -157,7 +176,9 @@ public class Manager {
      * 3.3
      * Получение Эпиков по идентификатору
      */
+    @Override
     public Epic takeEpic(int id) {
+        historyManager.add(epicHashMap.get(id));
         return epicHashMap.get(id);
     }
 
@@ -165,6 +186,7 @@ public class Manager {
      * 3.4
      * Создание Эпиков
      */
+    @Override
     public Epic createEpic(Epic epic) {
         epic.setId(++generatorId);
         epicHashMap.put(epic.getId(), epic);
@@ -175,6 +197,7 @@ public class Manager {
      * 3.5
      * Обновление Эпика
      */
+    @Override
     public void updateEpic(Epic epic) {
         if (!epicHashMap.containsKey(epic.getId())) {
             return;
@@ -188,6 +211,7 @@ public class Manager {
      * 3.6
      * Удаление Эпика по идентификатору
      */
+    @Override
     public void deleteEpic(int id) {
         Epic currentEpic = epicHashMap.remove(id);
         for (SubTask subTask : currentEpic.getSubTaskArray()) {
@@ -205,9 +229,19 @@ public class Manager {
     }
 
     /**
-     * Универскльный метод обновления статуса у Эпиков
+     * 4.1 Получение списка истории просмотра задач
      */
-    private String updateStatus(int id) {
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
+    }
+
+    /**
+     * 4.2 Универскльный метод обновления статуса у Эпиков
+     *
+     * @return
+     */
+    private Status updateStatus(int id) {
         int counterNEW = 0;
         int counterDONE = 0;
         Epic epicTemp = epicHashMap.get(id);

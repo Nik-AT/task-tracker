@@ -5,11 +5,11 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private ArrayList<SubTask> subTaskArray = new ArrayList<>();
 
-    public Epic(String name, String description, String status, int id) {  // если создана эпик без подзадач
+    public Epic(String name, String description, Status status, int id) {  // если создана эпик без подзадач
         super(name, description, status, id);
     }
 
-    public Epic(String name, String description, String status, int id, ArrayList<SubTask> subTaskArray) {
+    public Epic(String name, String description, Status status, int id, ArrayList<SubTask> subTaskArray) {
         super(name, description, status, id);
         this.subTaskArray = subTaskArray;
     }
@@ -29,5 +29,4 @@ public class Epic extends Task {
                 + "Подзадачи :" + "\n" + subTaskArray;
 
     }
-
 }
