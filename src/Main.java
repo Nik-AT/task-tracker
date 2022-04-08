@@ -17,7 +17,7 @@ public class Main {
  * сохранился, а статус эпика рассчитался по статусам подзадач.
  * И, наконец, попробуйте удалить одну из задач и один из эпиков.
  */
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+        TaskManager inMemoryTaskManager = Managers.getInMemoryTask() ;
         List<Task> history = inMemoryTaskManager.getHistory();
 
         Task task1 = new Task("Задача1", "Описание задачи1", Status.NEW, 0);
