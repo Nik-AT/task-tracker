@@ -4,8 +4,6 @@ import model.Status;
 import model.SubTask;
 import model.Task;
 
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
 
@@ -35,14 +33,14 @@ public class Main {
         subTask3.setEpicId(epic1.getId());
         inMemoryTaskManager.createSubTask(subTask3);
         System.out.println("*** Получение истории задач :");
-        inMemoryTaskManager.takeTask(1);
-        inMemoryTaskManager.takeTask(2);
-        inMemoryTaskManager.takeTask(1);
-        inMemoryTaskManager.takeTask(3);
-        inMemoryTaskManager.takeSubTask(6);
-        inMemoryTaskManager.takeSubTask(7);
-        inMemoryTaskManager.takeSubTask(8);
-        inMemoryTaskManager.takeEpic(4);
+        inMemoryTaskManager.getTask(1);
+        inMemoryTaskManager.getTask(2);
+        inMemoryTaskManager.getTask(1);
+        inMemoryTaskManager.getTask(3);
+        inMemoryTaskManager.getSubTask(6);
+        inMemoryTaskManager.getSubTask(7);
+        inMemoryTaskManager.getSubTask(8);
+        inMemoryTaskManager.getEpic(4);
         System.out.println(historyManager.getHistory());
         System.out.println("***END***");
 
@@ -54,7 +52,7 @@ public class Main {
         System.out.println("***END***");
 
         System.out.println("Удаление эпика :");
-        inMemoryTaskManager.deleteEpic(4);
+        inMemoryTaskManager.deleteAllEpic(4);
         System.out.println(historyManager.getHistory());
         System.out.println("***END***");
     }

@@ -13,19 +13,19 @@ public interface TaskManager {
      * 1.1
      * Получение списка всех задач
      */
-    List<Task> getTask();
+    List<Task> getAllTasks();
 
     /**
      * 1.2
      * Удаление всех задач
      */
-    void deleteTask();
+    void deleteAllTasks();
 
     /**
      * 1.3
      * Получение задачи по идентификатору
      */
-    Task takeTask(int id);
+    Task getTask(int id);
 
     /**
      * 1.4
@@ -49,19 +49,19 @@ public interface TaskManager {
      * 2.1
      * Получение списка всех подзадач
      */
-    ArrayList<SubTask> getSubTask();
+    ArrayList<SubTask> getAllSubTasks();
 
     /**
      * 2.2
      * Удаление всех подзадач
      */
-    void deleteSubTask();
+    void deleteAllSubTasks();
 
     /**
      * 2.3
      * Получение задачи по идентификатору
      */
-    SubTask takeSubTask(int id);
+    SubTask getSubTask(int id);
 
     /**
      * 2.4
@@ -85,19 +85,19 @@ public interface TaskManager {
      * 3.1
      * Получение списка всех Эпиков
      */
-    ArrayList<Epic> getEpic();
+    ArrayList<Epic> getAllEpic();
 
     /**
      * 3.2
      * Удаление всех Эпиков
      */
-    void deleteEpic();
+    void deleteAllEpic();
 
     /**
      * 3.3
      * Получение Эпиков по идентификатору
      */
-    Epic takeEpic(int id);
+    Epic getEpic(int id);
 
     /**
      * 3.4
@@ -115,7 +115,7 @@ public interface TaskManager {
      * 3.6
      * Удаление Эпика по идентификатору
      */
-    void deleteEpic(int id);
+    void deleteAllEpic(int id);
 
     /**
      * Возвращает историю задач
