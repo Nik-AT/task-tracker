@@ -3,21 +3,96 @@ package manager;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> historyArray = new ArrayList<>();  // New arraylist for add object Task, Sub, Epic
+
+    public Node head;
+    public Node tail;
+    public static Map<Integer, Node> map = new HashMap<>();
+
+    public static class Node {
+
+        private Task data;
+        private Node next;
+        private Node prev;
+
+        public Node(Node prev, Task data, Node next) {
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
 
     @Override
     public void add(Task task) {
-        if (historyArray.size() >= 10) {
-            historyArray.remove(0);
+        final Node node = map.get(task.getId());
+        if (node != null) {
+            removeNode(node);
         }
-        historyArray.add(task);
+        linkLast(task);
     }
 
     @Override
     public List<Task> getHistory() {
+        return getTasks();
+    }
+
+    @Override
+    public void remove(int id) {
+        Node node = map.get(id);
+        if (node != null) {
+            removeNode(node);
+            map.remove(id);
+        }
+    }
+
+    public void linkLast(Task task) {
+        Node oldTail = tail;
+        Node newNode = new Node(oldTail, task, null);
+        tail = newNode;
+        if (oldTail == null) {
+            head = newNode;
+        } else {
+            oldTail.next = newNode;
+        }
+        map.put(task.getId(), newNode);
+    }
+
+    public List<Task> getTasks() {
+        List<Task> historyArray = new ArrayList<>();
+        Node node = head;
+        while (node != null) {
+            historyArray.add(node.data);
+            node = node.next;
+        }
         return historyArray;
     }
+
+    public void removeNode(Node node) {
+        if (node.next == null && node.prev == null) {
+            head = null;
+            tail = null;
+        }
+        if (node == head) {
+            head = node.next;
+            node.next.prev = null;
+        }
+        if (node == tail) {
+            tail = node.prev;
+            node.prev.next = null;
+        }
+        if (node.prev != null && node.next != null) {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+
+
+
+
+    }
+
+
 }
