@@ -67,7 +67,7 @@ public interface TaskManager {
      * 2.4
      * Создание подзадач
      */
-    SubTask createSubTask(SubTask subTask);
+    void createSubTask(SubTask subTask);
 
     /**
      * 2.5
@@ -103,7 +103,7 @@ public interface TaskManager {
      * 3.4
      * Создание Эпиков
      */
-    Epic createEpic(Epic epic);
+    void createEpic(Epic epic);
 
     /**
      * 3.5
@@ -115,7 +115,7 @@ public interface TaskManager {
      * 3.6
      * Удаление Эпика по идентификатору
      */
-    void deleteAllEpic(int id);
+    void removeEpic(int id);
 
     /**
      * Возвращает историю задач

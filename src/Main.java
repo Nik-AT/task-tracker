@@ -6,7 +6,9 @@ import model.Task;
 
 public class Main {
     public static void main(String[] args) {
-
+        /**
+         * Тесты для 5 спринта находятся в FileBackedTasksManager
+         */
         TaskManager inMemoryTaskManager = Managers.getInMemoryTask() ;  //  new InMemoryTaskManager();
         HistoryManager historyManager = Managers.getHistory();
 
@@ -17,9 +19,9 @@ public class Main {
         Epic epic1 = new Epic("Эпик1", "Описание ЭПИК1", Status.NEW, 0);
         Epic epic2 = new Epic("Эпик2", "Описание ЭПИК2", Status.NEW, 0);
 
-        SubTask subTask1 = new SubTask("Саб для эпика1", "Описание подзадачи1", Status.NEW, 0);
-        SubTask subTask2 = new SubTask("Саб для эпика2", "Описание подзадачи2", Status.NEW, 0);
-        SubTask subTask3 = new SubTask("Саб для эпика3", "Описание подзадачи3", Status.NEW, 0);
+        SubTask subTask1 = new SubTask("Саб для эпика1", "Описание подзадачи1", Status.NEW, 0, 4);
+        SubTask subTask2 = new SubTask("Саб для эпика2", "Описание подзадачи2", Status.NEW, 0, 4);
+        SubTask subTask3 = new SubTask("Саб для эпика3", "Описание подзадачи3", Status.NEW, 0, 4);
 
         inMemoryTaskManager.createTask(task1);
         inMemoryTaskManager.createTask(task2);
@@ -50,9 +52,9 @@ public class Main {
         inMemoryTaskManager.removeTask(3);
         System.out.println(historyManager.getHistory());
         System.out.println("***END***");
-
         System.out.println("Удаление эпика :");
-        inMemoryTaskManager.deleteAllEpic(4);
+        inMemoryTaskManager.removeEpic(4);
+        inMemoryTaskManager.deleteAllEpic();
         System.out.println(historyManager.getHistory());
         System.out.println("***END***");
     }

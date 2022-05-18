@@ -11,11 +11,11 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private int generatorId = 0;
-    private final HashMap<Integer, Task> taskHashMap;
-    private final HashMap<Integer, SubTask> subTaskHashMap;
-    private final HashMap<Integer, Epic> epicHashMap;
-    private final HistoryManager historyManager = Managers.getHistory();  // new InMemoryHistoryManager
+    protected int generatorId = 0;
+    public final HashMap<Integer, Task> taskHashMap;
+    protected final HashMap<Integer, SubTask> subTaskHashMap;
+    protected final HashMap<Integer, Epic> epicHashMap;
+    protected final HistoryManager historyManager = Managers.getHistory();  // new InMemoryHistoryManager
 
     public InMemoryTaskManager() {
         this.taskHashMap = new HashMap<>();
@@ -125,13 +125,12 @@ public class InMemoryTaskManager implements TaskManager {
      * Создание подзадач
      */
     @Override
-    public SubTask createSubTask(SubTask subTask) {
+    public void createSubTask(SubTask subTask) {
         subTask.setId(++generatorId);
         Epic epic = epicHashMap.get(subTask.getEpicId());
         epic.getSubTaskArray().add(subTask);
         subTaskHashMap.put(subTask.getId(), subTask);
         updateStatus(subTask.getEpicId());
-        return subTask;
     }
 
     /**
@@ -194,10 +193,10 @@ public class InMemoryTaskManager implements TaskManager {
      * Создание Эпиков
      */
     @Override
-    public Epic createEpic(Epic epic) {
+    public void createEpic(Epic epic) {
         epic.setId(++generatorId);
         epicHashMap.put(epic.getId(), epic);
-        return epic;
+
     }
 
     /**
@@ -219,7 +218,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Удаление Эпика по идентификатору
      */
     @Override
-    public void deleteAllEpic(int id) {
+    public void removeEpic(int id) {
         Epic currentEpic = epicHashMap.remove(id);
         for (SubTask subTask : currentEpic.getSubTaskArray()) {
             subTaskHashMap.remove(subTask.getId());
