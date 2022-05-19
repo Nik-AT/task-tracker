@@ -13,10 +13,6 @@ import static model.TypeTask.TASK;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    public static void main(String[] args) {
-        saveToFile();
-        loadFromFile();
-    }
     private final File file;
 
     public FileBackedTasksManager(File file) {
@@ -166,11 +162,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 writer.newLine();
             }
             writer.append("\n" + toStringHistoryManager(historyManager));
-            //todo
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка!");
+        }
     }
 
     private String toString(Task task) {
@@ -238,13 +233,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             line = reader.readLine();
             List<Integer> list = fromStringInt(line);
-            loadFromFile(list);
+            addToHistoryManager(list);
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка!");
         }
     }
 
-    private void loadFromFile(List<Integer> list) {
+    private void addToHistoryManager(List<Integer> list) {
         for (Integer integer : list) {
             for (Map.Entry<Integer, Task> integerTaskEntry : taskHashMap.entrySet()) {
                 if (integerTaskEntry.getKey().equals(integer)) {
@@ -268,51 +263,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
         manager.load();
         return manager;
-    }
-
-
-
-    private static void saveToFile() {
-        FileBackedTasksManager fb = new FileBackedTasksManager(new File("task.csv"));
-
-        Task task1 = new Task("Задача1", "Описание задачи1", Status.NEW, 0);
-        Task task2 = new Task("Задача2", "Описание задачи2", Status.NEW, 0);
-        Task task3 = new Task("Задача2", "Описание задачи2", Status.NEW, 0);
-
-        Epic epic1 = new Epic("Эпик1", "Описание ЭПИК1", Status.NEW, 0);
-        Epic epic2 = new Epic("Эпик2", "Описание ЭПИК2", Status.NEW, 0);
-
-        SubTask subTask1 = new SubTask("Саб для эпика1", "Описание подзадачи1", Status.DONE, 0, 4);
-        SubTask subTask2 = new SubTask("Саб для эпика2", "Описание подзадачи2", Status.NEW, 0, 4);
-        SubTask subTask3 = new SubTask("Саб для эпика3", "Описание подзадачи3", Status.NEW, 0, 5);
-
-        fb.createTask(task1);
-        fb.createTask(task2);
-        fb.createTask(task3);
-        fb.createEpic(epic1);
-        fb.createEpic(epic2);
-        fb.createSubTask(subTask1);
-        fb.createSubTask(subTask2);
-        fb.createSubTask(subTask3);
-        fb.getTask(1);
-        fb.getSubTask(6);
-        fb.getSubTask(7);
-        fb.getEpic(4);
-        fb.getEpic(5);
-        fb.getHistory();
-    }
-
-    private static void loadFromFile() {
-        FileBackedTasksManager.loadFromFile(new File("task.csv"));
-        TaskManager inMemoryTaskManager = FileBackedTasksManager.loadFromFile(new File("task.csv"));
-        System.out.println("Задачи:");
-        System.out.println(inMemoryTaskManager.getAllTasks());
-        System.out.println("\n" + "Эпики:");
-        System.out.println(inMemoryTaskManager.getAllEpic());
-        System.out.println("\n" + "Подзадачи:");
-        System.out.println(inMemoryTaskManager.getAllSubTasks());
-        System.out.println("\n" + "История из файла:");
-        System.out.println(inMemoryTaskManager.getHistory());
     }
 }
 

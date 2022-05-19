@@ -6,7 +6,7 @@ public class Managers {
 
     public static TaskManager getInMemoryTask() {
         if (taskManager == null) {
-        taskManager = new InMemoryTaskManager();
+            taskManager = new InMemoryTaskManager();
         }
         return taskManager;
     }

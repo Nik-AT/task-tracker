@@ -38,7 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void deleteAllTasks() {
-        for (Integer key: taskHashMap.keySet())
+        for (Integer key : taskHashMap.keySet())
             historyManager.remove(key);
         taskHashMap.clear();
     }

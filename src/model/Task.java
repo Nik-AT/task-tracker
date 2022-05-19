@@ -38,6 +38,7 @@ public class Task {
         this.status = status;
         return status;
     }
+
     public TypeTask getType() {
         return TypeTask.TASK;
     }
