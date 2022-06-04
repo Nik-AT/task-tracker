@@ -1,16 +1,17 @@
 package model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
     private ArrayList<SubTask> subTaskArray = new ArrayList<>();
 
-    public Epic(String name, String description, Status status, int id) {  // если создана эпик без подзадач
-        super(name, description, status, id);
+    public Epic(String name, String description, Status status, int id, LocalDateTime startTime, int duration) {  // если создана эпик без подзадач
+        super(name, description, status, id, startTime, duration);
     }
 
-    public Epic(String name, String description, Status status, int id, ArrayList<SubTask> subTaskArray) {
-        super(name, description, status, id);
+    public Epic(String name, String description, Status status, int id, ArrayList<SubTask> subTaskArray, LocalDateTime startTime, int duration) {
+        super(name, description, status, id, startTime, duration);
         this.subTaskArray = subTaskArray;
     }
 

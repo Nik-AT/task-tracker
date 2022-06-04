@@ -3,6 +3,7 @@ package manager;
 import model.*;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public FileBackedTasksManager(File file, boolean load) {
         this.file = file;
-        if (load) {
-            load();
-        }
+//        if (load) {
+//            load();
+//        }
     }
 
     @Override
@@ -134,11 +135,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getAllSubTaskOfEpic(Epic epic) {
-        return super.getAllSubTaskOfEpic(epic);
-    }
-
-    @Override
     public List<Task> getHistory() {
         List<Task> history = super.getHistory();
         save();
@@ -147,7 +143,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private void save() {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.append("id,type,name,status,description,epic");
+            writer.append("id,type,name,status,description,start,duration,epic");
             writer.newLine();
             for (Map.Entry<Integer, Task> entry : taskHashMap.entrySet()) {
                 writer.append(toString(entry.getValue()));
@@ -170,7 +166,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private String toString(Task task) {
         String taskString = task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
-                + task.getDescription() + ",";
+                + task.getDescription() + ","  + task.getStartTime() + "," + task.getDuration() + ",";
         if (task.getType().equals(SUBTASK)) {
             SubTask subTask = (SubTask) task;
             taskString = taskString + subTask.getEpicId() + ",";
@@ -193,13 +189,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String name = split[2];
         Status status = Status.valueOf(split[3]);
         String description = split[4];
+        LocalDateTime start = LocalDateTime.parse(split[5]);
+        int duration = Integer.parseInt(split[6]);
         switch (typeTask) {
             case TASK:
-                return new Task(name, description, status, id);
+                return new Task(name, description, status, id, start, duration);
             case SUBTASK:
-                return new SubTask(name, description, status, id, Integer.parseInt(split[5]));
+                return new SubTask(name, description, status, id, start, duration, Integer.parseInt(split[7]));
             case EPIC:
-                return new Epic(name, description, status, id);
+                return new Epic(name, description, status, id, start, duration);
         }
         return null;
     }

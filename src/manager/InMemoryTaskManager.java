@@ -5,9 +5,8 @@ import model.Status;
 import model.SubTask;
 import model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -61,6 +60,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createTask(Task task) {
         task.setId(++generatorId);
+        checkCrossTask(task);
         taskHashMap.put(task.getId(), task);
     }
 
@@ -70,6 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void updateTask(Task task) {
+        checkCrossTask(task);
         if (!taskHashMap.containsKey(task.getId())) {
             return;
         }
@@ -127,6 +128,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createSubTask(SubTask subTask) {
         subTask.setId(++generatorId);
+        checkCrossTask(subTask);
         Epic epic = epicHashMap.get(subTask.getEpicId());
         epic.getSubTaskArray().add(subTask);
         subTaskHashMap.put(subTask.getId(), subTask);
@@ -139,6 +141,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void updateSubTask(SubTask subTask) {
+        checkCrossTask(subTask);
         subTaskHashMap.put(subTask.getId(), subTask);
         updateStatus(subTask.getEpicId());
     }
@@ -153,6 +156,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicHashMap.get(subTask.getEpicId());
         epic.getSubTaskArray().remove(subTask);
         updateStatus(subTask.getEpicId());
+
         historyManager.remove(id);
     }
 
@@ -176,6 +180,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(key);
         }
         epicHashMap.clear();
+        subTaskHashMap.clear();
     }
 
     /**
@@ -245,7 +250,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * 4.2 Универскльный метод обновления статуса у Эпиков
+     * 4.2 Универсальный метод обновления статуса у Эпиков
      *
      * @return
      */
@@ -270,9 +275,36 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return epicTemp.setStatus(Status.IN_PROGRESS);
     }
+    public Set<Task> getPrioritizedTasks(){
+        ArrayList<Task> allTasks = getAllTasks();
+        ArrayList<SubTask> allSubTasks = getAllSubTasks();
+        Comparator<Task> comparator = Comparator.comparing(Task::getStartTime);
+        Set<Task> tasksAndSubtask = new TreeSet<>(Comparator.nullsLast(comparator));
+        tasksAndSubtask.addAll(allTasks);
+        tasksAndSubtask.addAll(allSubTasks);
+        return tasksAndSubtask;
+    }
+    public void checkCrossTask(Task task) {
+        if (task.getStartTime() == null) {
+            Set<Task> set = getPrioritizedTasks();
+            LocalDateTime latestTaskTime = LocalDateTime.MIN;
+            for (Task taskTemp : set) {
+                if (taskTemp.getStartTime().plusMinutes(taskTemp.getDuration()).isAfter(latestTaskTime)) {
+                    latestTaskTime = taskTemp.getStartTime().plusMinutes(taskTemp.getDuration());
+                }
+            }
+            task.setStartTime(latestTaskTime.plusMinutes(5));
+        }
+        Set<Task> treeSet = getPrioritizedTasks();
+        LocalDateTime timeStartTime = task.getStartTime();
+        LocalDateTime timeEndTime = task.getStartTime().plusMinutes(task.getDuration());
+        for (Task tempTask : treeSet) {
+            if ((timeStartTime.isAfter(tempTask.getStartTime()) && timeStartTime.isBefore(tempTask.getStartTime().plusMinutes(tempTask.getDuration()))) ||
+                    (timeEndTime.isAfter(tempTask.getStartTime()) && timeStartTime.isBefore(tempTask.getStartTime().plusMinutes(tempTask.getDuration()))) ){
+                throw new RuntimeException("Ошибка, пересечения задач --> " + tempTask.getName());
+            }
+        }
+    }
 }
-
-
-
 
 
