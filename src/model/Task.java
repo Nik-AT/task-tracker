@@ -10,7 +10,6 @@ public class Task {
     private int id;
     private LocalDateTime startTime;
     private int duration;
-    private LocalDateTime endTime;
 
     public Task(String name, String description, Status status, int id, LocalDateTime startTime, int duration) {
         this.name = name;
@@ -19,7 +18,6 @@ public class Task {
         this.id = id;
         this.startTime = startTime;
         this.duration = duration;
-        this.endTime = startTime.plusMinutes(duration);
     }
 
     public String getName() {
@@ -60,7 +58,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return startTime.plusMinutes(duration);
     }
 
     public TypeTask getType() {
@@ -74,14 +72,6 @@ public class Task {
     public void setId(int id) {
         this.id = id;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Task{" +
-//                "name='" + name + '\'' +
-//                ", id=" + id +
-//                '}';
-//    }
 
     @Override
     public String toString() {
