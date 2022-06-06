@@ -53,6 +53,10 @@ public class Task {
         this.startTime = startTime;
     }
 
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     public int getDuration() {
         return duration;
     }
