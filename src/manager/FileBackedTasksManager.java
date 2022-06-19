@@ -141,7 +141,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return history;
     }
 
-    private void save() {
+    protected void save() {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.append("id,type,name,status,description,start,duration,epic");
             writer.newLine();
@@ -211,7 +211,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return history;
     }
 
-    private void load() {
+    protected void load() {
         try (final BufferedReader reader = new BufferedReader(new FileReader(file, UTF_8))) {
             reader.readLine();
             String line = reader.readLine();
