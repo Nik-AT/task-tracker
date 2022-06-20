@@ -1,15 +1,14 @@
 package manager;
 
+import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import java.io.IOException;
-import java.net.URI;
-
 public class HttpClientObj {
 
-    public String post(String url, String body) {
+    public String post(String url, String body) throws IOException {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))

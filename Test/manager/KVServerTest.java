@@ -13,6 +13,7 @@ public class KVServerTest {
     private Gson gson = Managers.getGson();
 
     private static KVServer kvServer;
+
     @BeforeAll
     static void startServers() {
         try {

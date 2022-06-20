@@ -7,6 +7,7 @@ public class Task {
     private String name;
     private String description;
     private Status status;
+    private TypeTask typeTask;
     private int id;
     private LocalDateTime startTime;
     private int duration;
@@ -18,6 +19,7 @@ public class Task {
         this.id = id;
         this.startTime = startTime;
         this.duration = duration;
+        this.typeTask = TypeTask.TASK;
     }
 
     public String getName() {
@@ -66,7 +68,11 @@ public class Task {
     }
 
     public TypeTask getType() {
-        return TypeTask.TASK;
+        return typeTask;
+    }
+
+    public void setTypeTask(TypeTask typeTask) {
+        this.typeTask = typeTask;
     }
 
     public int getId() {

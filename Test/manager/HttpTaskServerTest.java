@@ -1,7 +1,6 @@
 package manager;
 
 import com.google.gson.Gson;
-import model.Task;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ public class HttpTaskServerTest {
             kvServer = new KVServer();
             kvServer.start();
             httpTaskServer = new HttpTaskServer();
-            httpTaskServer.server.start();
+            httpTaskServer.start();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -67,6 +66,6 @@ public class HttpTaskServerTest {
     @AfterAll
     static void stopServers() {
         kvServer.stop();
-        httpTaskServer.server.stop(0);
+        httpTaskServer.stop();
     }
 }

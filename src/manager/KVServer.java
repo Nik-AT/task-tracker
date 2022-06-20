@@ -1,6 +1,7 @@
 package manager;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,8 +9,7 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
@@ -91,24 +91,8 @@ public class KVServer {
                 data.put(key, value);
                 System.out.println("Значение для ключа " + key + " успешно обновлено!");
                 h.sendResponseHeaders(200, 0);
-            } else if ("DELETE".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("/save/".length());
-                if (key.isEmpty()) {
-                    System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
-                    h.sendResponseHeaders(400, 0);
-                    return;
-                }
-                if ("tasks".equals(key) || "subtasks".equals(key) || "epics".equals(key)) {
-                    data.clear();
-                    System.out.println("Значения удалены!");
-                    h.sendResponseHeaders(200, 0);
-                    return;
-                }
-                data.remove(key);
-                System.out.println("Значение для ключа " + key + " успешно удалено!");
-                h.sendResponseHeaders(200, 0);
             } else {
-                System.out.println("/save ждёт POST-запрос или DELETE-запрос, а получил: " + h.getRequestMethod());
+                System.out.println("/save ждёт POST-запрос, а получил: " + h.getRequestMethod());
                 h.sendResponseHeaders(405, 0);
             }
         } finally {
