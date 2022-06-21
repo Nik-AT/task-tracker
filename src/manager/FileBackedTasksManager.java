@@ -237,7 +237,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private void addToHistoryManager(List<Integer> list) {
+    protected void addToHistoryManager(List<Integer> list) {
         for (Integer integer : list) {
             for (Map.Entry<Integer, Task> integerTaskEntry : taskHashMap.entrySet()) {
                 if (integerTaskEntry.getKey().equals(integer)) {

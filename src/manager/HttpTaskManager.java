@@ -21,10 +21,10 @@ public class HttpTaskManager extends FileBackedTasksManager {
         load();
     }
 
-    @Override
-    public List<Task> getHistory() {
-        return super.getHistory();
-    }
+//    @Override
+//    public List<Task> getHistory() {
+//        return super.getHistory();
+//    }
 
     @Override
     protected void load() {
@@ -34,8 +34,11 @@ public class HttpTaskManager extends FileBackedTasksManager {
         ArrayList<SubTask> subtasks = gson.fromJson(kvClient.load("subtasks"),
                 new TypeToken<ArrayList<SubTask>>() {
                 }.getType());
-        ArrayList<Epic> epics = gson.fromJson(kvClient.load("subtasks"),
+        ArrayList<Epic> epics = gson.fromJson(kvClient.load("epics"),
                 new TypeToken<ArrayList<Epic>>() {
+                }.getType());
+        ArrayList<Integer> history = gson.fromJson(kvClient.load("history"),
+                new TypeToken<ArrayList<Integer>>() {
                 }.getType());
         if (tasks != null) {
             for (int i = 0; i < tasks.size(); i++) {
@@ -52,6 +55,9 @@ public class HttpTaskManager extends FileBackedTasksManager {
                 taskHashMap.put(epics.get(i).getId(), epics.get(i));
             }
         }
+        if (history != null) {
+            addToHistoryManager(history);
+        }
     }
 
     @Override
@@ -62,5 +68,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         kvClient.put("subtasks", jsonTasks);
         jsonTasks = gson.toJson(new ArrayList<>(epicHashMap.values()));
         kvClient.put("epics", jsonTasks);
+        jsonTasks = gson.toJson(new ArrayList<>(historyManager.getHistory()));
+        kvClient.put("history", jsonTasks);
     }
 }

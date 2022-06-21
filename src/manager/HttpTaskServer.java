@@ -413,12 +413,7 @@ public class HttpTaskServer {
             }
             return;
         }
-        String fullJson = "[";
-        for (int i = 0; i < tasks.size(); i++) {
-            fullJson += jsonString(tasks.get(i));
-        }
-        fullJson += "]";
-        response = jsonString(fullJson);
+        response = gson.toJson(tasks);
         httpExchange.sendResponseHeaders(200, 0);
         try (OutputStream os = httpExchange.getResponseBody()) {
             os.write(response.getBytes());
